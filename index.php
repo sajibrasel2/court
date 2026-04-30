@@ -1208,7 +1208,14 @@ function viewSavedCourt(courtId) {
 
 // --- PWA Install Logic ---
 let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
+        // Show Android Download Card if on mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+            const downloadCard = document.getElementById('android-download-card');
+            if (downloadCard) downloadCard.classList.remove('hidden');
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     $('installCard').style.display = 'block';
