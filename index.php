@@ -1172,6 +1172,18 @@ function renderSavedCourts() {
         html += `
             <div class="saved-court" onclick="viewSavedCourt(${court.id})">
                 <div class="court-icon">⚖</div>
+                <div class="p-4 border-b">
+                    <h3 class="font-bold text-lg mb-2">অ্যান্ড্রয়েড অ্যাপ ডাউনলোড করুন</h3>
+                    <p class="text-sm text-gray-600 mb-4">আমাদের প্রফেশনাল অ্যান্ড্রয়েড অ্যাপটি ডাউনলোড করে আরও দ্রুত এবং সহজে মামলা ম্যানেজ করুন।</p>
+                    <a href="signed/amarmamla-signed.apk" class="inline-flex items-center justify-center w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M17.523 15.3414L12 20.8644L6.477 15.3414H9V3.13559H15V15.3414H17.523ZM12 2L2 12H5V22H19V12H22L12 2Z"/></svg>
+                        অ্যাপ ডাউনলোড করুন
+                    </a>
+                </div>
+                
+                <div class="p-4">
+                    <h3 class="font-bold text-lg mb-2">এপ ইনস্টল করুন</h3>
+                </div>
                 <div class="court-info">
                     <div class="court-name">${court.name}</div>
                     <div class="court-detail">আদালত নং: ${en2bn(court.id)}</div>
