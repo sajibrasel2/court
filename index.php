@@ -62,17 +62,17 @@
             box-shadow: var(--shadow-lg);
         }
         .header h1 {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .header h1 svg { flex-shrink: 0; }
         .header-sub {
-            font-size: 12px;
+            font-size: 13px;
             opacity: 0.85;
-            margin-top: 2px;
+            margin-top: 4px;
         }
 
         /* Bottom Navigation */
@@ -92,22 +92,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 8px 4px;
+            justify-content: center;
+            padding: 12px 8px;
             cursor: pointer;
             transition: all 0.2s;
             border: none;
             background: none;
             color: var(--text-secondary);
             font-family: inherit;
-            font-size: 11px;
-            gap: 2px;
+            font-size: 13px;
+            font-weight: 600;
+            gap: 4px;
+            min-height: 64px;
         }
         .nav-item.active {
             color: var(--primary);
         }
         .nav-item svg {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
         }
         .nav-item.active svg { fill: var(--primary); }
 
@@ -133,10 +136,10 @@
             box-shadow: var(--shadow);
         }
         .card-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -148,23 +151,24 @@
         }
         .form-group label {
             display: block;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         .form-control {
             width: 100%;
-            padding: 12px 14px;
+            padding: 14px 16px;
             border: 2px solid var(--border);
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 16px;
             font-family: inherit;
             background: var(--card);
             color: var(--text);
             transition: border-color 0.2s;
             appearance: none;
             -webkit-appearance: none;
+            min-height: 48px;
         }
         .form-control:focus {
             outline: none;
@@ -183,15 +187,16 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 12px 24px;
+            padding: 14px 24px;
             border: none;
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
             font-family: inherit;
             cursor: pointer;
             transition: all 0.2s;
             width: 100%;
+            min-height: 48px;
         }
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -241,39 +246,39 @@
         .case-item {
             background: var(--card);
             border-radius: var(--radius);
-            padding: 14px;
-            margin-bottom: 8px;
+            padding: 16px;
+            margin-bottom: 10px;
             box-shadow: var(--shadow);
             border-left: 4px solid var(--primary);
         }
         .case-item .case-sl {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-secondary);
             font-weight: 600;
         }
         .case-item .case-no {
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 700;
             color: var(--text);
             margin: 4px 0;
         }
         .case-item .case-activity {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--primary);
             font-weight: 600;
             background: rgba(26,35,126,0.08);
-            padding: 4px 10px;
+            padding: 6px 12px;
             border-radius: 6px;
             display: inline-block;
             margin-top: 4px;
         }
         .case-item .case-next {
-            font-size: 12px;
+            font-size: 14px;
             color: var(--success);
             margin-top: 4px;
         }
         .case-item .case-order {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-secondary);
             margin-top: 2px;
         }
@@ -323,11 +328,11 @@
             margin-left: 12px;
         }
         .saved-court .court-name {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
         }
         .saved-court .court-detail {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-secondary);
             margin-top: 2px;
         }
@@ -425,17 +430,18 @@
             -webkit-overflow-scrolling: touch;
         }
         .quick-date-btn {
-            padding: 6px 14px;
+            padding: 10px 18px;
             border: 2px solid var(--border);
             border-radius: 20px;
             background: var(--card);
-            font-size: 12px;
+            font-size: 14px;
             font-family: inherit;
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
             color: var(--text);
             transition: all 0.2s;
+            min-height: 40px;
         }
         .quick-date-btn.active {
             border-color: var(--primary);
@@ -1224,6 +1230,15 @@ let deferredPrompt;
             const downloadCard = document.getElementById('android-download-card');
             if (downloadCard) downloadCard.classList.remove('hidden');
         }
+
+        // Disable pinch-to-zoom and double-tap zoom completely
+        document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
+        document.addEventListener('gesturechange', function(e) { e.preventDefault(); });
+        document.addEventListener('gestureend', function(e) { e.preventDefault(); });
+        document.addEventListener('dblclick', function(e) { e.preventDefault(); });
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) { e.preventDefault(); }
+        }, { passive: false });
 
         window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
