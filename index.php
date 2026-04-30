@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#1a237e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -39,6 +39,16 @@
             min-height: 100vh;
             padding-bottom: 80px;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        html {
+            overflow-x: hidden;
+            width: 100%;
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
         }
 
         /* Header */
