@@ -7,9 +7,9 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 
 // DB Connection
 $db_host = 'localhost';
-$db_user = 'root';
-$db_pass = '';
-$db_name = 'court_app';
+$db_user = 'techandc_bot';
+$db_pass = '12345Sajibs6@';
+$db_name = 'techandc_court';
 $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 if ($conn->connect_error) {
     die(json_encode(['error' => 'Database connection failed']));

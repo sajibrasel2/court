@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/YOUR_CPANEL_USERNAME/public_html/court/
+    - export DEPLOYPATH=/home/techandc/public_html/court/
     - /bin/cp -R * $DEPLOYPATH
