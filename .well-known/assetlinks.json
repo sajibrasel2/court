@@ -3,7 +3,7 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "com.techandclick.amarmamla",
+      "package_name": "site.techandclick.twa",
       "sha256_cert_fingerprints": [
         "5D:FC:07:A4:97:DB:68:DC:24:7A:F2:87:D2:E4:38:86:92:69:33:E1:72:34:8D:7E:D3:F3:46:C3:89:7E:38:98"
       ]
