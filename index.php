@@ -1637,13 +1637,15 @@ function renderMyCases() {
                 </div>
                 ` : ''}
                 
-                <div style="display:flex; gap:10px; margin-top:8px; font-size:12px;">
-                    <div style="flex:1; background:rgba(0,0,0,0.04); padding:6px; border-radius:6px;">
-                        <div style="color:var(--text-secondary); font-size:10px;">আগের তারিখ</div>
-                        <div style="font-weight:600;">${prevEntry ? formatDateBn(prevEntry.next_date) : (c.prev_date || 'N/A')}</div>
+                <div style="display:flex; gap:10px; margin-top:8px; font-size:13px;">
+                    ${(prevEntry || c.prev_date) ? `
+                    <div style="flex:1; background:rgba(0,0,0,0.04); padding:8px; border-radius:6px;">
+                        <div style="color:var(--text-secondary); font-size:11px;">পূর্ববর্তী তারিখ</div>
+                        <div style="font-weight:600;">${prevEntry ? formatDateBn(prevEntry.next_date) : formatDateBn(c.prev_date)}</div>
                     </div>
-                    <div style="flex:1; background:rgba(46,125,50,0.1); padding:6px; border-radius:6px;">
-                        <div style="color:var(--success); font-size:10px;">পরবর্তী তারিখ ${isTomorrow ? '(আগামীকাল)' : ''}</div>
+                    ` : ''}
+                    <div style="flex:1; background:rgba(46,125,50,0.1); padding:8px; border-radius:6px;">
+                        <div style="color:var(--success); font-size:11px;">পরবর্তী তারিখ ${isTomorrow ? '(আগামীকাল)' : ''}</div>
                         <div style="font-weight:700; color:${isTomorrow ? '#d32f2f' : 'var(--success)'};">${c.next_date ? formatDateBn(c.next_date) : 'আপলোড হয়নি'}</div>
                     </div>
                 </div>
