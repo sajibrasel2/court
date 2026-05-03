@@ -336,9 +336,10 @@
             color: var(--text-secondary);
             margin-top: 2px;
         }
-        .saved-court .delete-btn {
-            width: 32px;
-            height: 32px;
+        .saved-court .delete-btn,
+        .case-item .delete-btn {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             border: none;
             background: rgba(198,40,40,0.1);
@@ -347,7 +348,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .case-item .delete-btn:active {
+            background: rgba(198,40,40,0.25);
         }
 
         /* Empty State */
@@ -1560,6 +1566,7 @@ function addToMyCases(courtId, courtName, caseData) {
 }
 
 function deleteCase(courtId, caseNo) {
+    if (!confirm('আপনি কি এই মামলাটি মুছে ফেলতে চান?')) return;
     myCases = myCases.filter(c => !(c.courtId === courtId && c.case_no === caseNo));
     localStorage.setItem('myCases', JSON.stringify(myCases));
     renderMyCases();
@@ -1610,7 +1617,7 @@ function renderMyCases() {
             <div class="case-item" style="border-left-color: ${isTomorrow ? '#d32f2f' : 'var(--accent)'}; margin-bottom:12px; ${isTomorrow ? 'background: #fff8f8; border-width: 2px;' : ''}">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                     <div class="case-no" style="color:var(--primary)">${c.case_no}</div>
-                    <button class="delete-btn" onclick="deleteCase(${c.courtId}, '${c.case_no.replace(/'/g, "\\'")}')">✕</button>
+                    <button class="delete-btn" data-court="${c.courtId}" data-case="${c.case_no.replace(/"/g, '&quot;')}">✕</button>
                 </div>
                 <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">${c.courtName}</div>
                 <div class="case-activity">${c.last_activity}</div>
@@ -1763,6 +1770,16 @@ function setupDropdowns(divId, distId, layerId, courtId, searchBtnId) {
 
 // --- Init ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Event delegation for delete buttons
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.case-item .delete-btn');
+        if (btn) {
+            const courtId = parseInt(btn.dataset.court);
+            const caseNo = btn.dataset.case;
+            deleteCase(courtId, caseNo);
+        }
+    });
+
     setupQuickDates();
     setupDropdowns('division', 'district', 'courtLayer', 'lowerCourt', 'btnSearch');
     setupDropdowns('searchDivision', 'searchDistrict', 'searchCourtLayer', 'searchLowerCourt', 'btnCaseSearch');
