@@ -517,6 +517,13 @@
                 <label>নিরাপত্তা প্রশ্ন: আপনার প্রিয় রং কি?</label>
                 <input type="text" class="form-control" id="regSecurity" placeholder="যেমন: লাল/নীল (পিন রিসেট করতে লাগবে)">
             </div>
+            <div class="form-group">
+                <label style="display:flex; align-items:center; gap:6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.107.546 4.092 1.504 5.822L0 24l6.336-1.652A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75c-1.97 0-3.84-.536-5.47-1.548l-.393-.234-4.073 1.062 1.085-3.965-.257-.41A9.72 9.72 0 0 1 2.25 12c0-5.385 4.365-9.75 9.75-9.75S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>
+                    WhatsApp নম্বর (মামলার আপডেট পেতে)
+                </label>
+                <input type="text" class="form-control" id="regWhatsapp" placeholder="০১৭XXXXXXXX (ঐ নম্বর দিলে WhatsApp-এ মামলার আপডেট পাবেন)">
+            </div>
             <button class="btn btn-primary" onclick="handleAuth('register')">রেজিস্ট্রেশন সম্পন্ন করুন</button>
             <div style="margin-top: 15px; font-size: 13px;">
                 ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="#" onclick="showAuthMode('login')">লগইন করুন</a>
@@ -1319,6 +1326,10 @@ async function handleAuth(mode) {
     formData.append('pin', pin);
     formData.append('mode', mode);
     if (security_answer) formData.append('security_answer', security_answer);
+    if (mode === 'register') {
+        const whatsapp = $('regWhatsapp').value.trim();
+        if (whatsapp) formData.append('whatsapp_number', whatsapp);
+    }
 
     try {
         const res = await fetch(API + '?action=auth', {

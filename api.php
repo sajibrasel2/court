@@ -179,9 +179,10 @@ switch ($action) {
             }
             $hashedPin = password_hash($pin, PASSWORD_DEFAULT);
             $hashedAnswer = password_hash(strtolower($security_answer), PASSWORD_DEFAULT);
-            $stmt = $conn->prepare("INSERT INTO users (phone, pin, security_answer, name) VALUES (?, ?, ?, ?)");
+            $whatsapp = $_POST['whatsapp_number'] ?? '';
+            $stmt = $conn->prepare("INSERT INTO users (phone, whatsapp_number, pin, security_answer, name) VALUES (?, ?, ?, ?, ?)");
             $name = 'User ' . substr($phone, -4);
-            $stmt->bind_param("ssss", $phone, $hashedPin, $hashedAnswer, $name);
+            $stmt->bind_param("sssss", $phone, $whatsapp, $hashedPin, $hashedAnswer, $name);
             if ($stmt->execute()) {
                 echo json_encode(['success' => true, 'user_id' => $conn->insert_id, 'name' => $name, 'new' => true]);
             } else {
