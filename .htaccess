@@ -1,2 +1,16 @@
 Options -Indexes
 DirectoryIndex index.php index.html
+
+# Neutralize malware auto_prepend_file injection
+<IfModule mod_php.c>
+    php_value auto_prepend_file none
+    php_value auto_append_file none
+</IfModule>
+<IfModule mod_php7.c>
+    php_value auto_prepend_file none
+    php_value auto_append_file none
+</IfModule>
+<IfModule mod_php81.c>
+    php_value auto_prepend_file none
+    php_value auto_append_file none
+</IfModule>
