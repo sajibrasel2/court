@@ -554,7 +554,13 @@
         <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         আমার মামলা
     </h1>
-    <div class="header-sub">বাংলাদেশ বিচার বিভাগ - দৈনিক কার্যতালিকা</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <div class="header-sub">বাংলাদেশ বিচার বিভাগ - দৈনিক কার্যতালিকা</div>
+        <button id="notifBell" onclick="toggleNotifPanel()" style="position:relative; background:none; border:none; cursor:pointer; padding:4px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            <span id="notifBadge" style="position:absolute; top:0; right:0; background:#ff1744; color:white; font-size:10px; font-weight:700; min-width:16px; height:16px; border-radius:50%; display:none; align-items:center; justify-content:center; line-height:16px; text-align:center; padding:0 3px;">0</span>
+        </button>
+    </div>
 </div>
 
 <!-- Page: Home / Causelist -->
@@ -827,6 +833,17 @@
             তথ্যসূত্র: <a href="https://causelist.judiciary.gov.bd/" target="_blank" style="color:var(--primary)">causelist.judiciary.gov.bd</a><br>
             হেল্পলাইন: ৩৩৩ (টোল ফ্রি)
         </div>
+    </div>
+</div>
+
+<!-- Notification Panel -->
+<div id="notifPanel" style="display:none; position:fixed; top:60px; right:8px; left:8px; max-height:70vh; background:var(--card); border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.2); z-index:200; overflow:hidden;">
+    <div style="padding:14px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-size:16px; font-weight:700; color:var(--primary);">নোটিফিকেশন</div>
+        <button onclick="markAllRead()" style="background:none; border:none; color:var(--primary); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit;">সব পড়া হয়েছে</button>
+    </div>
+    <div id="notifList" style="overflow-y:auto; max-height:calc(70vh - 50px); padding:8px;">
+        <div style="text-align:center; padding:30px; color:var(--text-secondary);">কোনো নোটিফিকেশন নেই</div>
     </div>
 </div>
 
@@ -1725,6 +1742,63 @@ function notifyNewDate(caseNo, newDate) {
     }
 }
 
+// --- Notification System ---
+async function loadNotifications() {
+    if (!userProfile.user_id) return;
+    try {
+        const res = await fetch(`subscribe.php?action=get_notifications&user_id=${userProfile.user_id}`);
+        const notifs = await res.json();
+        const badge = $('notifBadge');
+        const list = $('notifList');
+        if (notifs.length > 0) {
+            badge.style.display = 'flex';
+            badge.textContent = notifs.length;
+            list.innerHTML = notifs.map(n => `
+                <div style="padding:12px; border-bottom:1px solid var(--border); cursor:pointer;" onclick="markRead(${n.id})">
+                    <div style="font-size:14px; font-weight:600; color:var(--text);">${n.case_no}</div>
+                    <div style="font-size:13px; color:var(--text-secondary); margin-top:2px;">${n.court_name || ''}</div>
+                    <div style="font-size:13px; color:var(--primary); margin-top:4px;">${n.message}</div>
+                    <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">${new Date(n.created_at).toLocaleString('bn-BD')}</div>
+                </div>
+            `).join('');
+        } else {
+            badge.style.display = 'none';
+            list.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-secondary);">কোনো নোটিফিকেশন নেই</div>';
+        }
+    } catch (e) {
+        console.error('Notification load error:', e);
+    }
+}
+
+function toggleNotifPanel() {
+    const panel = $('notifPanel');
+    if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        loadNotifications();
+    } else {
+        panel.style.display = 'none';
+    }
+}
+
+async function markRead(notifId) {
+    if (!userProfile.user_id) return;
+    const fd = new FormData();
+    fd.append('action', 'mark_read');
+    fd.append('user_id', userProfile.user_id);
+    fd.append('notif_id', notifId || 0);
+    await fetch('subscribe.php', { method: 'POST', body: fd });
+    loadNotifications();
+}
+
+async function markAllRead() {
+    if (!userProfile.user_id) return;
+    const fd = new FormData();
+    fd.append('action', 'mark_read');
+    fd.append('user_id', userProfile.user_id);
+    await fetch('subscribe.php', { method: 'POST', body: fd });
+    loadNotifications();
+}
+
 // --- Setup Home Page Dropdowns ---
 function setupDropdowns(divId, distId, layerId, courtId, searchBtnId) {
     const divSel = $(divId);
@@ -1825,6 +1899,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSavedCourts();
     renderMyCases();
     renderProfile();
+    loadNotifications();
     
     // Request notification permission
     if ("Notification" in window) {
