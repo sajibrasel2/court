@@ -1591,6 +1591,32 @@ function addToMyCases(courtId, courtName, caseData) {
     showToast('মামলাটি "আমার মামলা" তালিকায় যোগ করা হয়েছে');
     renderMyCases();
     syncUp();
+    
+    // Send instant WhatsApp if next_date is today or tomorrow
+    if (userProfile.user_id && newCase.next_date) {
+        const today = new Date();
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const todayStr = formatDateToApi(today);
+        const tomorrowStr = formatDateToApi(tomorrow);
+        const nextDateClean = newCase.next_date.replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d));
+        
+        let whenText = '';
+        if (nextDateClean.includes(todayStr) || nextDateClean === todayStr) {
+            whenText = 'আজ';
+        } else if (nextDateClean.includes(tomorrowStr) || nextDateClean === tomorrowStr) {
+            whenText = 'আগামীকাল';
+        }
+        
+        if (whenText) {
+            const waMsg = `⚖️ আমার মামলা আপডেট\n\n${whenText} আপনার মামলা নং ${caseNo} এর তারিখ - ${courtName}\n\n- আমার মামলা অ্যাপ`;
+            const fd = new FormData();
+            fd.append('action', 'send_whatsapp');
+            fd.append('user_id', userProfile.user_id);
+            fd.append('message', waMsg);
+            fetch(API + '?action=send_whatsapp', { method: 'POST', body: fd }).catch(() => {});
+        }
+    }
 }
 
 function deleteCase(courtId, caseNo) {

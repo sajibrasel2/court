@@ -296,6 +296,51 @@ switch ($action) {
         echo json_encode(['success' => true]);
         break;
 
+    case 'send_whatsapp':
+        $user_id = intval($_POST['user_id'] ?? 0);
+        $message = $_POST['message'] ?? '';
+        if (!$user_id || !$message) {
+            echo json_encode(['error' => 'Missing data']);
+            break;
+        }
+        $stmt = $conn->prepare("SELECT whatsapp_number, phone, name FROM users WHERE id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $user = $stmt->get_result()->fetch_assoc();
+        if (!$user) {
+            echo json_encode(['error' => 'User not found']);
+            break;
+        }
+        $phone = $user['whatsapp_number'] ?: $user['phone'];
+        if (empty($phone)) {
+            echo json_encode(['error' => 'No phone number']);
+            break;
+        }
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+        if (strlen($phone) === 11 && substr($phone, 0, 1) === '0') {
+            $phone = '880' . substr($phone, 1);
+        }
+        $waInstance = 'instance172977';
+        $waToken = '4t8k67fi2hw233sp';
+        $waUrl = "https://api.ultramsg.com/{$waInstance}/messages/chat";
+        $waData = http_build_query([
+            'token' => $waToken,
+            'to' => '+' . $phone,
+            'body' => $message
+        ]);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $waUrl);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $waData);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        $waResponse = curl_exec($ch);
+        $waCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        echo json_encode(['success' => $waCode === 200, 'code' => $waCode]);
+        break;
+
     default:
         echo json_encode(['error' => 'Invalid action.']);
 }
