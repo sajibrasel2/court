@@ -15,8 +15,8 @@ $conn->set_charset("utf8mb4");
 // ===== WhatsApp Config (UltraMsg) =====
 // Sign up at https://ultramsg.com - free tier available
 // Scan QR, get Instance ID and Token
-$WHATSAPP_INSTANCE = '';  // e.g. 'instance12345'
-$WHATSAPP_TOKEN = '';     // e.g. 'abc123token'
+$WHATSAPP_INSTANCE = 'instance172977';
+$WHATSAPP_TOKEN = '4t8k67fi2hw233sp';
 $WHATSAPP_ENABLED = !empty($WHATSAPP_INSTANCE) && !empty($WHATSAPP_TOKEN);
 
 // Get today and tomorrow in both formats
